@@ -1,0 +1,6 @@
+{
+  "dart.sdkPath": "/var/home/ryan/flutter/bin/cache/dart-sdk",
+  "terminal.integrated.env.linux": {
+    "PATH": "/var/home/ryan/flutter/bin/cache/dart-sdk/bin:${env:PATH}"
+  }
+}
