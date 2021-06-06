@@ -1,8 +1,10 @@
 # plade
 
+[![pub package](https://img.shields.io/pub/v/plade.svg)](https://pub.dev/packages/plade)
+
 Plade is a type-safe CLI parsing library for Dart.
 
-## Features
+## Highlights
 
 - Fully type-safe and null-safe.
 - Support for a variety of different parsing styles (including GNU-style long
