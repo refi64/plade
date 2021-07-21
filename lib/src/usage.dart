@@ -319,7 +319,7 @@ class DefaultUsagePrinter {
 
     var usagePrefix = 'Usage: ${info.application ?? '<this application>'} ';
     if (context.path.isNotEmpty) {
-      usagePrefix += context.path.map((c) => c.name).join();
+      usagePrefix += context.path.map((c) => c.name).join() + ' ';
     }
 
     sink.write(usagePrefix);
