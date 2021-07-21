@@ -106,6 +106,9 @@ ValueParser<T> stringChoiceValueParser<T>(List<T> choices,
 /// A specialization of [stringChoiceValueParser] that uses [enumValuePrinter]
 /// by default in order to parse enums.
 ///
+/// If [interceptPrinter] is not `null`, then it will be called on the result of
+/// [enumValuePrinter] to modify it.
+///
 /// ```dart
 /// enum X { a, b, c }
 ///
@@ -113,8 +116,15 @@ ValueParser<T> stringChoiceValueParser<T>(List<T> choices,
 /// print(xParser('a'));  // X.a
 /// xParser('foo');       // throws an exception
 /// ```
-ValueParser<T> enumChoiceValueParser<T>(List<T> values) =>
-    stringChoiceValueParser(values, printer: enumValuePrinter);
+ValueParser<T> enumChoiceValueParser<T>(List<T> values,
+        {ValuePrinter<String>? interceptPrinter}) =>
+    stringChoiceValueParser(values, printer: (value) {
+      var result = enumValuePrinter(value);
+      if (interceptPrinter != null) {
+        result = interceptPrinter(result);
+      }
+      return result;
+    });
 
 /// A [ValueParser] that parses boolean values using [stringChoiceValueParser].
 final boolValueParser = stringChoiceValueParser([true, false]);
