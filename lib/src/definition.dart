@@ -246,7 +246,7 @@ class ArgumentSet {
     if (!includeInverse) {
       optionsIter = optionsIter.where((e) =>
           e.value is! OptionArgumentDefinition ||
-          e.key == e.value.flag?.inverse);
+          e.key != e.value.flag?.inverse);
     }
     yield* optionsIter;
   }
