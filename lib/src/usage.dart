@@ -327,7 +327,9 @@ class DefaultUsagePrinter {
     sink.writeLines(_wrap(_buildUsageLine(args), attributes));
 
     if (!showShortUsage) {
-      var prologue = info.prologue;
+      var prologue = context.path.isNotEmpty
+          ? context.path.last.description
+          : info.prologue;
       if (prologue != null) {
         sink.writeln();
         sink.writeLines(_wrap(prologue, attributes));
