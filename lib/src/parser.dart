@@ -43,6 +43,25 @@ class ArgParser {
   /// Creates a new usage group with the given name.
   UsageGroup createUsageGroup(String name) => _base.createUsageGroup(name);
 
+  /// Returns the farthest parser the user has selected (i.e. given `mycommand
+  /// subcommand1 subcommand2`, returns the parser for `subcommand2`). This
+  /// interface is not guaranteed to be stable!
+  ArgParser findSelectedParser() {
+    var currentParser = this;
+
+    while (true) {
+      var commandSet = currentParser.args.commandSet;
+      if (commandSet == null || commandSet.valueHolder.isValueEmpty) {
+        break;
+      }
+
+      var commandId = commandSet.printer(commandSet.valueHolder.value);
+      currentParser = currentParser.commandParsers[commandId]!;
+    }
+
+    return currentParser;
+  }
+
   /// Shorthand for [addPositional] for strings with a default value of `null`.
   Arg<String?> addPositionalSN(String name,
           {String? description,
@@ -404,7 +423,8 @@ class AppArgParser extends ArgParser {
       sink ??= stderr;
 
       sink.writeln(ex);
-      printUsage(sink: sink, showShortUsage: showShortUsage);
+      findSelectedParser()
+          .printUsage(sink: sink, showShortUsage: showShortUsage);
 
       exit(1);
     }
@@ -417,19 +437,7 @@ class AppArgParser extends ArgParser {
       String description = 'Show this help',
       StringSink? sink}) {
     addFlag(name, short: short, description: description, onParse: (_) {
-      ArgParser currentParser = this;
-
-      while (true) {
-        var commandSet = currentParser.args.commandSet;
-        if (commandSet == null || commandSet.valueHolder.isValueEmpty) {
-          break;
-        }
-
-        var commandId = commandSet.printer(commandSet.valueHolder.value);
-        currentParser = currentParser.commandParsers[commandId]!;
-      }
-
-      currentParser.printUsage(sink: sink, showShortUsage: false);
+      findSelectedParser().printUsage(sink: sink, showShortUsage: false);
       exit(0);
     });
   }
