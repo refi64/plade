@@ -48,7 +48,7 @@ extension _Run on Handler {
       withCommands.commands._selected = _commandSet!.selected;
     }
 
-    run(context).then(() {
+    return run(context).then(() {
       if (withCommands != null) {
         context._add(this);
 
