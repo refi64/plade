@@ -229,8 +229,11 @@ class DefaultUsagePrinter {
     return parts.join(' ');
   }
 
-  List<String> _wrap(String text, TerminalAttributes attributes) =>
-      attributes.width != null ? wrapper(text, attributes.width!) : [text];
+  List<String> _wrap(String text, TerminalAttributes attributes,
+          {int widthReduction = 0}) =>
+      attributes.width != null
+          ? wrapper(text, attributes.width! - widthReduction)
+          : [text];
 
   void _printGroup(StringSink sink, TerminalAttributes attributes,
       String groupName, List<Definition> contents) {
@@ -324,7 +327,13 @@ class DefaultUsagePrinter {
 
     sink.write(usagePrefix);
 
-    sink.writeLines(_wrap(_buildUsageLine(args), attributes));
+    var usageLines = _wrap(_buildUsageLine(args), attributes,
+        widthReduction: usagePrefix.length);
+    for (var i = 1; i < usageLines.length; i++) {
+      usageLines[i] = ' ' * usagePrefix.length + usageLines[i];
+    }
+
+    sink.writeLines(usageLines);
 
     if (!showShortUsage) {
       var prologue = context.path.isNotEmpty
